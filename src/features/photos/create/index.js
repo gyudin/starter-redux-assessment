@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addPhoto } from '../photos.slice';
 
 // Task 2: Import the `useDispatch()` method from the appropriate package
 // Task 3: Import the `addPhoto()` action creator from the photos slice
@@ -8,6 +10,7 @@ import './create.css';
 export default function CreatePhoto() {
   const [formData, setFormData] = useState({ imageUrl: '', caption: '' });
   // Task 4: Store a reference to the Redux store's dispatch method in a variable called `dispatch`
+  const dispatch = useDispatch();
 
   function handleChange({ target: { name, value } }) {
     setFormData({
@@ -17,9 +20,15 @@ export default function CreatePhoto() {
   }
 
   function handleSubmit(event) {
+  event.preventDefault();
+  console.log('formData:', formData);
     event.preventDefault();
-    // Task 5: Dispatch the `addPhoto()` action creator, passing in the form data
-    setFormData({ imageUrl: '', caption: '' });
+    if (formData.imageUrl && formData.caption) {
+      dispatch(addPhoto(formData));
+      setFormData({ imageUrl: '', caption: '' });
+    } else {
+      alert("ImageUrl and caption must not be empty");
+    }
   }
 
   return (
